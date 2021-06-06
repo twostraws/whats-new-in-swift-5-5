@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<playground version='6.0' target-platform='ios' display-mode='rendered'>
+<pages>
+    <page name='Introduction'/>
+        <page name='Async await'/>
+        <page name='Async sequences'/>
+        <page name='Effectful read-only properties'/>
+        <page name='Structured concurrency'/>
+        <page name='async let bindings'/>
+        <page name='Continuations for interfacing async tasks with synchronous code'/>
+        <page name='Actors'/>
+        <page name='Global actors'/>
+        <page name='Sendable and @Sendable closures'/>
+        <page name='if for postfix member expressions'/>
+        <page name='Allow interchangeable use of CGFloat and Double types'/>
+        <page name='Codable synthesis for enums with associated values'/>
+        <page name='lazy now works in local contexts'/>
+        <page name='Extend property wrappers to function and closure parameters'/>
+        <page name='Extending static member lookup in generic contexts'/>
+    </pages>
+</playground>
