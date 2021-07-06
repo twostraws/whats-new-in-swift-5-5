@@ -21,7 +21,7 @@ This is an Xcode playground that demonstrates the new features introduced in Swi
 This is designed to complement my existing article [What’s New in Swift 5.5](https://www.hackingwithswift.com/articles/233/whats-new-in-swift-5-5). You might also want to read previous articles about the evolution of Swift 5:
 
 - [What’s New in Swift 5.4](https://www.hackingwithswift.com/articles/228/whats-new-in-swift-5-4)
-- [What’s New in Swift 5.3](https://www.hackingwithswift.com/articles/212/whats-new-in-swift-5-3)
+- [What’s New in Swift 5.3](https://www.hackingwithswift.com/articles/218/whats-new-in-swift-5-3)
 - [What’s New in Swift 5.2](https://www.hackingwithswift.com/articles/212/whats-new-in-swift-5-2)
 - [What’s New in Swift 5.1](https://www.hackingwithswift.com/articles/182/whats-new-in-swift-5-1)
 - [What’s New in Swift 5.0](https://www.hackingwithswift.com/articles/126/whats-new-in-swift-5-0)
