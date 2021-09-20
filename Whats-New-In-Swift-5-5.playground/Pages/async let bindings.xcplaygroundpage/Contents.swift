@@ -11,7 +11,7 @@
 To demonstrate this, we could create a struct that has three different types of properties that will come from three different async functions:
 */
 struct UserData {
-    let username: String
+    let name: String
     let friends: [String]
     let highScores: [Int]
 }

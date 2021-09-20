@@ -12,6 +12,8 @@ To see how async/await helps the language, it’s helpful to look at how we solv
 
 For example, if we wanted to write code that fetched 100,000 weather records from a server, processes them to calculate the average temperature over time, then uploaded the resulting average back to a server, we might have written this:
 */
+import Foundation
+
 func fetchWeatherHistory(completion: @escaping ([Double]) -> Void) {
     // Complex networking code here; we'll just send back 100,000 random temperatures
     DispatchQueue.global().async {

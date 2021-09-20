@@ -10,6 +10,8 @@
 
 At this time SwiftUI hasn’t been updated to support this change, but if everything goes to plan we can stop writing this:
 */
+import SwiftUI
+
 Toggle("Example", isOn: .constant(true))
     .toggleStyle(SwitchToggleStyle())
 /*:

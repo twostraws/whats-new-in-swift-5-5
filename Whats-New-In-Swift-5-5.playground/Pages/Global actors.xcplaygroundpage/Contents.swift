@@ -12,6 +12,8 @@ Although in theory this could result in many global actors, the main benefit at 
 
 As an example, we might have a class to handle data storage in our app, and for safety reasons we refuse to write out change to persistent storage unless we’re on the main thread: 
 */
+import Foundation 
+
 class OldDataController {
     func save() -> Bool {
         guard Thread.isMainThread else {

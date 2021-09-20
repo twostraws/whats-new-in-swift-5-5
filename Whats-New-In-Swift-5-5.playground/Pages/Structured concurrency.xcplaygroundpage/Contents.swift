@@ -50,8 +50,6 @@ struct Main {
     }
 }
 /*:
-**Tip:** Before release, it should also be possible to run async code directly in main.swift, without using the `@main` attribute.
-
 The main changes introduced by structured concurrency are backed by two new types, `Task` and `TaskGroup`, which allow us to run concurrent operations either individually or in a coordinated way. 
 
 In its simplest form, you can start concurrent work by creating a new `Task` object and passing it the operation you want to run. This will start running on a background thread immediately, and you can use `await` to wait for its finished value to come back.
@@ -117,7 +115,7 @@ You can see both sleeping and cancellation in the following code example, which 
 func cancelSleepingTask() async {
     let task = Task { () -> String in
         print("Starting")
-        await Task.sleep(1_000_000_000)
+        try await Task.sleep(nanoseconds: 1_000_000_000)
         try Task.checkCancellation()
         return "Done"
     }
@@ -139,7 +137,7 @@ In that code, `Task.checkCancellation()` will realize the task has been cancelle
 
 For more complex work, you should create *task groups* instead – collections of tasks that work together to produce a finished value.
 
-To minimize the risk of programmers using task groups in dangerous ways, they don’t have a simple public initializer. Instead, task groups are created using functions such as `withTaskGroup()`: call this with the body of work you want done, and you’ll be passed in the task group instance to work with. Once inside the group you can add work using the `async()` method, and it will start executing immediately.
+To minimize the risk of programmers using task groups in dangerous ways, they don’t have a simple public initializer. Instead, task groups are created using functions such as `withTaskGroup()`: call this with the body of work you want done, and you’ll be passed in the task group instance to work with. Once inside the group you can add work using the `addTask()` method, and it will start executing immediately.
 
 **Important:** You should not attempt to copy that task group outside the body of `withTaskGroup()` – the compiler can’t stop you, but you’re just going to make problems for yourself.
 
@@ -147,11 +145,11 @@ To see a simple example of how task groups work – along with demonstrating an 
 */
 func printMessage() async {
     let string = await withTaskGroup(of: String.self) { group -> String in
-        group.async { "Hello" }
-        group.async { "From" }
-        group.async { "A" }
-        group.async { "Task" }
-        group.async { "Group" }
+        group.addTask { "Hello" }
+        group.addTask { "From" }
+        group.addTask { "A" }
+        group.addTask { "Task" }
+        group.addTask { "Group" }
 
         var collected = [String]()
 
@@ -165,11 +163,11 @@ func printMessage() async {
     print(string)
 }
 /*:
-That creates a task group designed to produce one finished string, then queues up several closures using the `async()` method of the task group. Each of those closures returns a single string, which then gets collected into an array of strings, before being joined into one single string and returned for printing.
+That creates a task group designed to produce one finished string, then queues up several closures using the `addTask()` method of the task group. Each of those closures returns a single string, which then gets collected into an array of strings, before being joined into one single string and returned for printing.
 
 **Tip:** All tasks in a task group must return the same type of data, so for complex work you might find yourself needing to return an enum with associated values in order to get exactly what you want. A simpler alternative is introduced in a separate Async Let Bindings proposal.
 
-Each call to `async()` can be any kind of function you like, as long as it results in a string. However, although task groups automatically wait for all the child tasks to complete before returning, when that code runs it’s a bit of a toss up what it will print because the child tasks can complete in any order – we’re as likely to get “Hello From Task Group A” as we are “Hello A Task Group From”, for example.
+Each call to `addTask()` can be any kind of function you like, as long as it results in a string. However, although task groups automatically wait for all the child tasks to complete before returning, when that code runs it’s a bit of a toss up what it will print because the child tasks can complete in any order – we’re as likely to get “Hello From Task Group A” as we are “Hello A Task Group From”, for example.
 
 If your task group is executing code that might throw, you can either handle the error directly inside the group or let it bubble up outside the group to be handled there. That latter option is handled using a different function, `withThrowingTaskGroup()`, which must be called with `try` if you haven’t caught all the errors you throw.
 
@@ -180,15 +178,15 @@ func printAllWeatherReadings() async {
         print("Calculating average weather…")
 
         let result = try await withThrowingTaskGroup(of: [Double].self) { group -> String in
-            group.async {
+            group.addTask {
                 try await getWeatherReadings(for: "London")
             }
 
-            group.async {
+            group.addTask {
                 try await getWeatherReadings(for: "Rome")
             }
 
-            group.async {
+            group.addTask {
                 try await getWeatherReadings(for: "San Francisco")
             }
 
@@ -206,9 +204,9 @@ func printAllWeatherReadings() async {
     }
 }
 /*:
-In that instance, each of the calls to `async()` is identical apart from the location string being passed in, so you can use something like `for location in ["London", "Rome", "San Francisco"] {` to call `async()` in a loop.
+In that instance, each of the calls to `addTask()` is identical apart from the location string being passed in, so you can use something like `for location in ["London", "Rome", "San Francisco"] {` to call `addTask()` in a loop.
 
-Task groups have a `cancelAll()` method that cancels any tasks inside the group, but using `async()` afterwards will continue to add work to the group. As an alternative, you can use `asyncUnlessCancelled()` to skip adding work if the group has been cancelled – check its returned Boolean to see whether the work was added successfully or not.
+Task groups have a `cancelAll()` method that cancels any tasks inside the group, but using `addTask()` afterwards will continue to add work to the group. As an alternative, you can use `addTaskUnlessCancelled()` to skip adding work if the group has been cancelled – check its returned Boolean to see whether the work was added successfully or not.
 
 &nbsp;
 

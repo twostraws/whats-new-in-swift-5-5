@@ -20,6 +20,8 @@ That has one simple case, one case with a single associated values, and a third 
 
 With that enum defined, we can create an array of weather to make a forecast, then use `JSONEncoder` or similar and convert the result to a printable string:
 */
+import Foundation
+
 let forecast: [Weather] = [
     .sun,
     .wind(speed: 10),

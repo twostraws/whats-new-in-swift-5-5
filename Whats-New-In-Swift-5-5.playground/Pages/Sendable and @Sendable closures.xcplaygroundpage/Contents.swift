@@ -37,6 +37,8 @@ However, that code would *not* be allowed if `score` were a variable, because it
 
 You can mark your own functions and closures using `@Sendable`, which will enforce similar rules around captured values:
 */
+import Foundation 
+
 func runLater(_ function: @escaping @Sendable () -> Void) -> Void {
     DispatchQueue.global().asyncAfter(deadline: .now() + 3, execute: function)
 }
